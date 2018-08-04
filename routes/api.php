@@ -20,7 +20,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix'=>'member'],function()
 {
-    Route::get('getmember',['uses'=>'MemberController@getmember']);
+Route::get('test',['uses'=>'MemberController@test']);
+    Route::get('getmemberinfo/{uid}',['uses'=>'MemberController@getmemberinfo']);
+    Route::get('getmembers/{uid}',['uses'=>'MemberController@getmembers']);
     Route::post('register',['uses'=>'MemberController@register']);
+    Route::post('updateprofile',['uses'=>'MemberController@updateprofile']);
+    Route::post('generateinvititationcode',['uses'=>'MemberController@generateinvititationcode']);
+    Route::post('addmember',['uses'=>'MemberController@addmember']);
+    Route::post('deletemember',['uses'=>'MemberController@deletemember']);
+    
+    
+});
+
+
+Route::group(['prefix'=>'place'],function()
+{
+    Route::post('addplace',['uses'=>'PlaceController@addplace']);
+    
+    
+});
+
+
+Route::group(['prefix'=>'group'],function()
+{
+    Route::post('addgroup',['uses'=>'GroupController@addgroup']);
     
 });
