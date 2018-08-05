@@ -32,7 +32,7 @@ class MemberController extends Controller {
       );
 
       try{
-       $results=DB::select("select id, uid, firstname, middlename, lastname, email, mobileno,avatar,invitationcode,	 Date_Format(invitationcodeexpiration, '%e-%b-%Y') as invitationcodeexpiration from members where uid=:uid",['uid'=>$uid]);
+       $results=DB::select("select id, uid, firstname, middlename, lastname, email, mobileno,avatar,invitationcode,	emptyphoto, Date_Format(invitationcodeexpiration, '%e-%b-%Y') as invitationcodeexpiration from members where uid=:uid",['uid'=>$uid]);
             if(count($results)>0){
                 $response["results"]=$results[0];
         
@@ -78,6 +78,14 @@ class MemberController extends Controller {
             );
         try
         {
+            $avatar="";
+            $emptyPhoto=false;
+            if(Input::get('avatar')==""){
+                $avatar="https://firebasestorage.googleapis.com/v0/b/trackingbuddy-5598a.appspot.com/o/member_photos%2Fempty_photo.png?alt=media&token=f686d82b-9677-45a6-9dc5-bfd56b1a1f6b";
+                $emptyPhoto=true;
+            }else{
+                $avatar=Input::get('avatar');
+            }
   
   
             DB::table('members')
@@ -87,6 +95,8 @@ class MemberController extends Controller {
                 'middlename' => Input::get('middlename'),
                 'lastname' => Input::get('lastname'),
                 'mobileno' => Input::get('mobileno'),
+                'avatar' => $avatar,
+                'emptyphoto' => $emptyPhoto,
                 'datemodified' => date("Y-m-d H:m:s")]);
 
              $response["status"]="202";    
@@ -144,7 +154,7 @@ class MemberController extends Controller {
         {
 
 
-            $invitationcode = substr(md5(microtime()),rand(0,26),5);
+            $invitationcode = substr(md5(microtime()),rand(0,26),10);
             $invitationcodeexpiration = date('Y-m-d', strtotime(date("Y-m-d"). ' + 5 days'));
 
             DB::table('members')
@@ -226,10 +236,17 @@ class MemberController extends Controller {
             );
         try
         {
-  
-            $invitationcode = substr(md5(microtime()),rand(0,26),5);
+    
+            $invitationcode = substr(md5(microtime()),rand(0,26),10);
             $invitationcodeexpiration = date('Y-m-d', strtotime(date("Y-m-d"). ' + 5 days'));
-
+            $avatar="";
+            $emptyPhoto=false;
+            if(Input::get('avatar')==""){
+                $avatar="https://firebasestorage.googleapis.com/v0/b/trackingbuddy-5598a.appspot.com/o/member_photos%2Fempty_photo.png?alt=media&token=f686d82b-9677-45a6-9dc5-bfd56b1a1f6b";
+                $emptyPhoto=true;
+            }else{
+                $avatar=Input::get('avatar');
+            }
             DB::table('members')->insert([
                 'uid'=>Input::get('uid'),
                 'firstname' => Input::get('firstname'),
@@ -239,6 +256,8 @@ class MemberController extends Controller {
                 'invitationcode' =>  strtoupper($invitationcode),
                 'invitationcodeexpiration' => $invitationcodeexpiration,
                 'mobileno' => Input::get('mobileno'),
+                'emptyphoto' => $emptyPhoto,
+                'avatar' => $avatar,
                 'datecreated' => date("Y-m-d H:m:s"),
                 'active' => 'Active',
                 'datemodified' => date("Y-m-d H:m:s")]);

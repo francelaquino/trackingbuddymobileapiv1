@@ -43,6 +43,10 @@ Route::group(['prefix'=>'place'],function()
 
 Route::group(['prefix'=>'group'],function()
 {
+    Route::get('getgroups/{uid}',['uses'=>'GroupController@getgroups']);
     Route::post('addgroup',['uses'=>'GroupController@addgroup']);
+    Route::post('updategroup',['uses'=>'GroupController@updategroup']);
+    Route::post('deletegroup',['uses'=>'GroupController@deletegroup']);
+    
     
 });
