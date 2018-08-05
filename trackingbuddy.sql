@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 05, 2018 at 12:38 PM
+-- Generation Time: Aug 05, 2018 at 06:56 PM
 -- Server version: 5.7.21
 -- PHP Version: 7.2.4
 
@@ -21,6 +21,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `trackingbuddy`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groupmembers`
+--
+
+DROP TABLE IF EXISTS `groupmembers`;
+CREATE TABLE IF NOT EXISTS `groupmembers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `memberuid` varchar(200) NOT NULL,
+  `groupid` int(11) NOT NULL,
+  `owner` varchar(200) NOT NULL,
+  `dateadded` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `groupmembers`
+--
+
+INSERT INTO `groupmembers` (`id`, `memberuid`, `groupid`, `owner`, `dateadded`) VALUES
+(12, 'owCKPuXXTXekgexnwzyGIqcLjMT2', 10, 'xtglGuqjBSgelajUUFg2ePhUymC3', '2018-08-05');
 
 -- --------------------------------------------------------
 

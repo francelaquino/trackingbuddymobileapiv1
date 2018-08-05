@@ -228,6 +228,70 @@ class MemberController extends Controller {
     }
 
 
+
+    public function addgroupmember()
+    {
+        $response=array(
+            'status'=>'',
+            'results'=>'',
+            );
+        try
+        {
+
+            $results= DB::select("select id from groupmembers where memberuid=:memberuid and groupid=:groupid and owner=:owner",
+            ['memberuid'=>Input::get('memberuid'),'groupid'=>Input::get('groupid'),'owner'=>Input::get('owner')]);
+        
+            if(count($results)<=0){
+                DB::table('groupmembers')->insert([
+                    'memberuid'=>Input::get('memberuid'),
+                    'groupid'=>Input::get('groupid'),
+                    'owner'=>Input::get('owner'),
+                    'dateadded' => date("Y-m-d H:m:s")]);
+
+            }
+            $response["status"]="202";
+            $response["results"]="";
+
+             return $response;
+
+        }catch(\Exception $e){
+            $response["status"]="500";
+            $response["results"]=$e;
+            return $response;
+         }
+
+    }
+
+
+    
+    public function removegroupmember()
+    {
+        $response=array(
+            'status'=>'',
+            'results'=>'',
+            );
+        try
+        {
+
+            
+            $where = array('memberuid' => Input::get('memberuid'),'groupid' => Input::get('groupid'),'owner' => Input::get('owner'));
+            DB::table('groupmembers')->where($where)->delete();
+
+
+            $response["status"]="202";
+            $response["results"]="";
+
+             return $response;
+
+        }catch(\Exception $e){
+            $response["status"]="500";
+            $response["results"]=$e;
+            return $response;
+         }
+
+    }
+
+
     public function register()
     {
         $response=array(

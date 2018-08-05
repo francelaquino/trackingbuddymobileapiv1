@@ -60,7 +60,28 @@ class GroupController extends Controller {
 
     }
 
+    public function getmembers($groupid,$owneruid)
+    {
+      $response=array(
+            'status'=>'',
+            'results'=>'',
+      );
 
+      try{
+       $results=DB::select("Select B.id,A.owner,B.uid, firstname, lastname, email, mobileno,avatar,case when C.id is null then 0 else 1 end as ismember from memberof A
+       inner join members B  on A.memberuid=B.uid 
+       left join groupmembers C on C.memberuid=B.uid and C.groupid=:groupid
+       where A.owner=:owner  order by firstname",['groupid'=>$groupid,'owner'=>$owneruid]);
+            $response["results"]=$results;
+            $response["status"]="202";    
+            return $response;
+
+        }catch(\Exception $e){
+            $response["status"]="500";
+            $response["results"]="";
+            return $response;
+        }
+    }
     
     
     public function deletegroup()
