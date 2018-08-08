@@ -32,11 +32,33 @@ class MemberController extends Controller {
       );
 
       try{
-       $results=DB::select("select id, uid, firstname, middlename, lastname, email, mobileno,avatar,invitationcode,	emptyphoto, Date_Format(invitationcodeexpiration, '%e-%b-%Y') as invitationcodeexpiration from members where uid=:uid",['uid'=>$uid]);
+       $results=DB::select("select upper(concat(firstname, ' ', lastname)) as fullname, id, uid, firstname, middlename, lastname, email, mobileno,avatar,invitationcode,	emptyphoto, Date_Format(invitationcodeexpiration, '%e-%b-%Y') as invitationcodeexpiration from members where uid=:uid",['uid'=>$uid]);
             if(count($results)>0){
                 $response["results"]=$results[0];
         
             }
+            $response["status"]="202";    
+            return $response;
+
+        }catch(\Exception $e){
+            $response["status"]="500";
+            $response["results"]="";
+            return $response;
+        }
+    }
+
+
+    
+  public function getmembernotification($uid)
+    {
+      $response=array(
+            'status'=>'',
+            'results'=>'',
+      );
+
+      try{
+       $results=DB::select("select A.id,A.arrives,A.leaves,B.place,B.address from placenotifications A inner join places B on A.placeid=B.id where A.useruid=:uid",['uid'=>$uid]);
+            $response["results"]=$results;
             $response["status"]="202";    
             return $response;
 

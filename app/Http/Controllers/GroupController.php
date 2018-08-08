@@ -54,7 +54,7 @@ class GroupController extends Controller {
 
         }catch(\Exception $e){
             $response["status"]="500";
-            $response["results"]="";
+            $response["results"]=$e;
             return $response;
          }
 
@@ -69,9 +69,29 @@ class GroupController extends Controller {
 
       try{
        $results=DB::select("Select B.id,A.owner,B.uid, firstname, lastname, email, mobileno,avatar,case when C.id is null then 0 else 1 end as ismember from memberof A
-       inner join members B  on A.memberuid=B.uid 
-       left join groupmembers C on C.memberuid=B.uid and C.groupid=:groupid
-       where A.owner=:owner  order by firstname",['groupid'=>$groupid,'owner'=>$owneruid]);
+       inner join members B  on A.memberuid=B.uid left join groupmembers C on C.memberuid=B.uid and C.groupid=:groupid where A.owner=:owner  order by firstname",['groupid'=>$groupid,'owner'=>$owneruid]);
+            $response["results"]=$results;
+            $response["status"]="202";    
+            return $response;
+
+        }catch(\Exception $e){
+            $response["status"]="500";
+            $response["results"]="";
+            return $response;
+        }
+    }
+
+
+    
+    public function getmembergroup($uid)
+    {
+      $response=array(
+            'status'=>'',
+            'results'=>'',
+      );
+
+      try{
+       $results=DB::select("select B.id,B.groupname,B.avatar from groupmembers A inner join groups B on A.groupid=B.id where A.memberuid=:memberuid order by B.groupname",['memberuid'=>$uid]);
             $response["results"]=$results;
             $response["status"]="202";    
             return $response;
@@ -96,7 +116,9 @@ class GroupController extends Controller {
             $where = array('owner' => Input::get('owneruid'),'id' => Input::get('id'));
             DB::table('groups')->where($where)->delete();
 
-            //Later Delete member 
+             $where = array('owner' => Input::get('owneruid'),'groupid' => Input::get('id'));
+            DB::table('groupmembers')->where($where)->delete();
+
             $response["status"]="202";    
         
              return $response;
